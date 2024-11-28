@@ -24,15 +24,21 @@ class PaperTexts(NamedTuple):
     abstract: str
     sections: list[list[str]]
 
+    def texts(self) -> list[str]:
+        ret = [self.abstract]
+        for section in self.sections:
+            ret.extend(section)
+        return ret
+
 
 def parse_html(html: etree._ElementTree) -> PaperTexts:
     math_nodes = html.xpath("//math")
     for node in math_nodes:
-        node.getparent().replace(node, etree.fromstring(f'<span>&lt;an expression&gt;</span>'))
+        node.getparent().replace(node, etree.fromstring(f'<span> &lt;a math expression&gt; </span>'))
 
     abstract_node = html.xpath("//div[@class = 'ltx_abstract']")
     if len(abstract_node) == 1:
-        abstract = extract_texts(abstract_node[0], {"p"})
+        abstract = "\n\n".join(extract_texts(abstract_node[0], {"p"}))
     else:
         abstract = ""
 
