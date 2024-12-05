@@ -12,7 +12,7 @@ class TranslateType(Enum):
 
 PROMPTS = {
     TranslateType.DEFAULT: """
-与えられた文章を日本語に翻訳してください。
+与えられた文章を日本語に翻訳してください。[a math expression 0] のような表記はそのままにしてください。
 """,
     TranslateType.SPEECH: """
 与えられた文章を日本語に翻訳してください。「OpenAI」→「オープンエーアイ」、「GPU」→「ジーピーユー」のように、英字からなる単語は必ずその読みのカタカナに置き換えるようにしてください。
