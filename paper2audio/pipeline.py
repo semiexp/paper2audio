@@ -75,7 +75,7 @@ async def main():
         print("Markdown output already exists")
     else:
         with open(out_md_path, "w") as f:
-            for tag, orig, trans in zip(tags, texts, translated):
+            for tag, orig, trans in zip(tags, texts_math, translated_math):
                 if tag == "p":
                     f.write(f"{orig}\n\n")
                     f.write(f"{trans}\n\n")
