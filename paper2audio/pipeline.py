@@ -33,6 +33,7 @@ async def main():
         texts = [paper.abstract]
     else:
         texts = paper.texts()
+    tags = paper.all_tags()
 
     out_text_path = os.path.join(args.translation_dir, os.path.basename(url) + ".json")
     out_md_path = os.path.join(args.translation_dir, os.path.basename(url) + ".md")
@@ -42,6 +43,7 @@ async def main():
 
         with open(out_text_path, "r") as f:
             data = json.load(f)
+            tags = data["tags"]
             texts = data["original"]
             translated = data["translated"]
             texts_math = data["original_math"]
@@ -61,6 +63,7 @@ async def main():
 
         with open(out_text_path, "w") as f:
             data = {
+                "tags": tags,
                 "original": texts,
                 "translated": translated,
                 "original_math": texts_math,
@@ -72,13 +75,21 @@ async def main():
         print("Markdown output already exists")
     else:
         with open(out_md_path, "w") as f:
-            f.write(f"# {url}\n\n")
-            f.write("| Original | Translated |\n")
-            f.write("| --- | --- |\n")
-            for orig, trans in zip(texts_math, translated_math):
-                orig = orig.replace("\n", " ")
-                trans = trans.replace("\n", " ")
-                f.write(f"| {orig} | {trans} |\n")
+            for tag, orig, trans in zip(tags, texts, translated):
+                if tag == "p":
+                    f.write(f"{orig}\n\n")
+                    f.write(f"{trans}\n\n")
+                else:
+                    if tag == "h1":
+                        prefix = "#"
+                    elif tag == "h2":
+                        prefix = "##"
+                    elif tag == "h3":
+                        prefix = "###"
+                    else:
+                        prefix = "####"
+
+                    f.write(f"{prefix} {orig} / {trans}\n\n")
 
     if args.output_audio:
         os.makedirs(args.voice_dir, exist_ok=True)
