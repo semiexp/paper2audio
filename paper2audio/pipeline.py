@@ -12,6 +12,7 @@ async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--api-key", type=str, default="apikey.txt")
     parser.add_argument("--abstract-only", action="store_true")
+    parser.add_argument("--base-url", type=str, default=None)
     parser.add_argument("--output-audio", action="store_true")
     parser.add_argument("--translation-dir", type=str, default="translations")
     parser.add_argument("--voice-dir", type=str, default="voices")
@@ -51,7 +52,7 @@ async def main():
     else:
         with open(args.api_key, "r") as fp:
             api_key = fp.read().strip()
-        translated = await run_translate_many(texts, api_key)
+        translated = await run_translate_many(texts, api_key, base_url=args.base_url)
 
         for orig, trans in zip(texts, translated):
             print("-" * 80)

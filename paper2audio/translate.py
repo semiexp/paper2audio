@@ -23,8 +23,8 @@ PROMPTS = {
 }
 
 
-def run_translate(text: str, api_key: str, translate_type: TranslateType = TranslateType.DEFAULT) -> str:
-    client = openai.Client(api_key=api_key)
+def run_translate(text: str, api_key: str, base_url: str | None = None, translate_type: TranslateType = TranslateType.DEFAULT) -> str:
+    client = openai.Client(api_key=api_key, base_url=base_url)
     resp = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -36,8 +36,8 @@ def run_translate(text: str, api_key: str, translate_type: TranslateType = Trans
     return ret
 
 
-async def run_translate_many(texts: list[str], api_key: str, translate_type: TranslateType = TranslateType.DEFAULT) -> list[str]:
-    client = openai.AsyncClient(api_key=api_key)
+async def run_translate_many(texts: list[str], api_key: str, base_url: str | None = None, translate_type: TranslateType = TranslateType.DEFAULT) -> list[str]:
+    client = openai.AsyncClient(api_key=api_key, base_url=base_url)
     
     requests = []
     for text in texts:
